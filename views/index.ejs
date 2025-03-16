@@ -1,0 +1,58 @@
+<%- include("partials/header.ejs") %>
+
+<!-- Blogs: -->
+<div id="blogs">
+  <% if (locals.headlines) { %>
+    <h1 style="margin-top: 2rem; margin-bottom: 2rem; font-size: 2rem;" class="headline">Latest Blogs</h1>
+    <% for (let i = 0; i < headlines.length; i++) { %>
+      <div>
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative blog-card">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2" id="genre">
+              <%= genres[i] %>
+            </strong>
+            <h3 class="mb-0 headline">
+              <%= headlines[i] %>
+            </h3>
+            <h5 class="my-2"><%= authors[i] %></h5>
+            <p class="card-text mb-3" id="subtitle">
+              <%= subtitles[i] %>
+            </p>
+            <div id="action">
+              <form action="/blog" method="GET">
+                <input type="hidden" name="id" value="<%= i %>">
+                <button class="btn continue" type="submit" style="width:fit-content;" id="read-more">
+                  Continue reading
+                </button>
+              </form>
+              <button class="btn delete-btn" type="button" style="width:fit-content;" id="delete" onclick="deleteBlog(<%= i %>)">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  <% } %>
+</div>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  function deleteBlog(blogId) {
+    fetch(`/delete?id=${blogId}`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        alert('Failed to delete blog');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to delete blog');
+    });
+  }
+</script>
